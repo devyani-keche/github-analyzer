@@ -2,7 +2,6 @@
 Analyzer API Routes
 """
 
-from backend.app.services import llm_service
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 import logging
