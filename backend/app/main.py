@@ -21,7 +21,7 @@ app = FastAPI(
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],  # React/Vite default ports
+    allow_origins=["https://github-analyzer-black.vercel.app", "http://localhost:5173"],  # React/Vite default ports
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
