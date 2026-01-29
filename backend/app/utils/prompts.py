@@ -22,8 +22,8 @@ Guidelines:
 - Questions should range from easy to hard difficulty
 - Interview questions should cover technical, architectural, and problem-solving aspects
 
-Output ONLY valid JSON without any markdown formatting or additional text."""
-
+CRITICAL: Output ONLY valid JSON without any markdown formatting or additional text.
+You MUST include ALL required fields: explanation (with overview, key_features, tech_stack, architecture, challenges_solved, impact), resume_bullets (minimum 5), viva_questions (minimum 5), and interview_qa (minimum 5)."""
 
 def get_analysis_prompt(repo_data: dict, focus: str = "all") -> str:
     """
