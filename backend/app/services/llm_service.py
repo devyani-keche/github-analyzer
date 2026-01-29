@@ -23,8 +23,8 @@ class LLMService:
         
         self.base_url = "https://api.groq.com/openai/v1/chat/completions"
         self.model = "llama-3.3-70b-versatile"  # Current Groq model
-        self.max_tokens = 8000
-        self.temperature = 0.3  # Lower temperature for more consistent structured outputs
+        self.max_tokens = 6000
+        self.temperature = 0.1  # Lower temperature for more consistent structured outputs
     
     async def generate_analysis(
         self,
