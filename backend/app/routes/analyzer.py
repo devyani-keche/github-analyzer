@@ -2,6 +2,7 @@
 Analyzer API Routes
 """
 
+from backend.app.services import llm_service
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.responses import JSONResponse
 import logging
@@ -78,6 +79,7 @@ async def analyze_repository(request: AnalyzeRepoRequest):
         
         # Step 4: Validate response structure
         logger.info("Validating LLM response...")
+        logger.info(f"LLM Response: {llm_response}")  # ADD THIS LINE
         llm_service.validate_response_structure(llm_response)
         
         # Step 5: Parse response into Pydantic models
