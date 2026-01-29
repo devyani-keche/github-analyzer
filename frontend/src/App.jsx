@@ -14,7 +14,7 @@ function App() {
     setResults(null);
 
     try {
-      const response = await fetch('/api/analyze-repo', {
+      const response = await fetch('https://github-analyzer-ciky.onrender.com/api/analyze-repo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

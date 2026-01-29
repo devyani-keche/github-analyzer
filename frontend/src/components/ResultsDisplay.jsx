@@ -33,7 +33,7 @@ function ResultsDisplay({ results, onReset }) {
 
   const downloadAsDocx = async () => {
     try {
-      const response = await fetch('/api/export-docx', {
+      const response = await fetch('https://github-analyzer-ciky.onrender.com/api/export-docx', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(results),
@@ -55,7 +55,7 @@ function ResultsDisplay({ results, onReset }) {
 
   const downloadAsPdf = async () => {
     try {
-      const response = await fetch('/api/export-pdf', {
+      const response = await fetch('https://github-analyzer-ciky.onrender.com/api/export-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(results),
