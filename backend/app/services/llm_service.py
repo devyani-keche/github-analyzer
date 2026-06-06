@@ -14,7 +14,7 @@ class LLMService:
     """Service for interacting with Groq LLM API"""
     
     def __init__(self):
-        self.api_key = os.getenv("GROQ_API_KEY")
+         self.api_key = token_manager.get_groq_token()
         if not self.api_key:
             raise ValueError("GROQ_API_KEY environment variable is required")
         
