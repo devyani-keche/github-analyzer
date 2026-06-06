@@ -15,7 +15,7 @@ class GitHubService:
     
     def __init__(self):
         self.base_url = "https://api.github.com"
-        self.token = os.getenv("GITHUB_TOKEN", "")
+        self.token = token_manager.get_github_token()
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
         }
