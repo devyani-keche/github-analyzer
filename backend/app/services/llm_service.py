@@ -8,7 +8,7 @@ import asyncio
 from typing import Dict
 import httpx
 from fastapi import HTTPException
-
+from app.utils.token_manager import token_manager
 
 class LLMService:
     """Service for interacting with Groq LLM API"""
