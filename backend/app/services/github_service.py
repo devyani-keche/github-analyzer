@@ -8,7 +8,7 @@ import base64
 from typing import Dict, List, Optional, Tuple
 import httpx
 from fastapi import HTTPException
-
+from app.utils.token_manager import token_manager
 
 class GitHubService:
     """Service for interacting with GitHub API"""
