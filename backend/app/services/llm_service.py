@@ -21,8 +21,8 @@ class LLMService:
         self.api_key = self.api_key.strip()
         
         # CORRECT: Use forward slash, not colon
-        self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro/generateContent"
-        self.model = "gemini-1.5-pro"
+        self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+        self.model = "gemini-2.5-flash"
         self.max_tokens = 4000
         self.temperature = 0.1
     
