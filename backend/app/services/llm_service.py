@@ -21,8 +21,10 @@ class LLMService:
         # Remove any whitespace
         self.api_key = self.api_key.strip()
         
-        self.base_url = "https://api.groq.com/openai/v1/chat/completions"
-        self.model = "llama-3.3-70b-versatile"  # Current Groq model
+        # self.base_url = "https://api.groq.com/openai/v1/chat/completions"
+        # self.model = "llama-3.3-70b-versatile"  # Current Groq model
+        self.base_url = "https://api.together.xyz/v1/chat/completions"
+        self.model = "meta-llama/Llama-3-70b-chat-hf"
         self.max_tokens = 6000
         self.temperature = 0.1  # Lower temperature for more consistent structured outputs
     
