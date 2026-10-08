@@ -18,13 +18,13 @@ class LLMService:
         if not self.api_key:
             raise ValueError("GOOGLE_API_KEY environment variable is required")
         
-        # Remove any whitespace
         self.api_key = self.api_key.strip()
         
-        self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent"
+        # CORRECT: Use forward slash, not colon
+        self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro/generateContent"
         self.model = "gemini-1.5-pro"
         self.max_tokens = 4000
-        self.temperature = 0.1  # Lower temperature for more consistent structured outputs
+        self.temperature = 0.1
     
     async def generate_analysis(
         self,
