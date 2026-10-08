@@ -1,5 +1,5 @@
 """
-LLM Service - Handles Groq API interactions for content generation
+LLM Service - Handles Google Gemini API interactions for content generation
 """
 
 import os
@@ -8,24 +8,22 @@ import asyncio
 from typing import Dict
 import httpx
 from fastapi import HTTPException
-from app.utils.token_manager import token_manager
+
 
 class LLMService:
-    """Service for interacting with Groq LLM API"""
+    """Service for interacting with Google Gemini API"""
     
     def __init__(self):
-        self.api_key = token_manager.get_groq_token()
+        self.api_key = os.getenv("GOOGLE_API_KEY")
         if not self.api_key:
-            raise ValueError("GROQ_API_KEY environment variable is required")
+            raise ValueError("GOOGLE_API_KEY environment variable is required")
         
         # Remove any whitespace
         self.api_key = self.api_key.strip()
         
-        # self.base_url = "https://api.groq.com/openai/v1/chat/completions"
-        # self.model = "llama-3.3-70b-versatile"  # Current Groq model
-        self.base_url = "https://api.together.xyz/v1/chat/completions"
-        self.model = "meta-llama/Llama-3-70b-chat-hf"
-        self.max_tokens = 6000
+        self.base_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+        self.model = "gemini-2.0-flash"
+        self.max_tokens = 4000
         self.temperature = 0.1  # Lower temperature for more consistent structured outputs
     
     async def generate_analysis(
@@ -35,7 +33,7 @@ class LLMService:
         max_retries: int = 2
     ) -> Dict:
         """
-        Generate analysis using Groq LLM
+        Generate analysis using Google Gemini API
         
         Args:
             system_prompt: System instruction prompt
@@ -46,27 +44,38 @@ class LLMService:
             Parsed JSON response from LLM
         """
         
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
+        # Combine system and user prompt for Gemini
+        full_prompt = f"{system_prompt}\n\n{user_prompt}"
+        
+        params = {
+            "key": self.api_key
         }
         
         payload = {
-            "model": self.model,
-            "messages": [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": full_prompt
+                        }
+                    ]
+                }
             ],
-            "temperature": self.temperature,
-            "max_tokens": self.max_tokens
+            "generationConfig": {
+                "temperature": self.temperature,
+                "maxOutputTokens": self.max_tokens,
+            }
         }
         
         async with httpx.AsyncClient() as client:
             for attempt in range(max_retries + 1):
                 try:
+                    # Rate limit protection
+                    await asyncio.sleep(1)
+                    
                     response = await client.post(
                         self.base_url,
-                        headers=headers,
+                        params=params,
                         json=payload,
                         timeout=60.0
                     )
@@ -74,8 +83,14 @@ class LLMService:
                     response.raise_for_status()
                     data = response.json()
                     
-                    # Extract content from response
-                    content = data['choices'][0]['message']['content']
+                    # Extract content from Gemini response
+                    if 'candidates' not in data or not data['candidates']:
+                        raise HTTPException(
+                            status_code=500,
+                            detail="No response from Gemini API"
+                        )
+                    
+                    content = data['candidates'][0]['content']['parts'][0]['text']
                     
                     # Parse JSON response
                     try:
@@ -101,7 +116,7 @@ class LLMService:
                     
                 except httpx.HTTPStatusError as e:
                     error_detail = e.response.text if hasattr(e.response, 'text') else str(e)
-                    print(f"Groq API Error Response: {error_detail}")  # Debug logging
+                    print(f"Gemini API Error Response: {error_detail}")  # Debug logging
                     
                     if e.response.status_code == 429:
                         # Rate limit - retry with backoff
@@ -110,17 +125,17 @@ class LLMService:
                             continue
                         raise HTTPException(
                             status_code=429,
-                            detail="Groq API rate limit exceeded. Please try again later."
+                            detail="Gemini API rate limit exceeded. Please try again later."
                         )
                     elif e.response.status_code == 401:
                         raise HTTPException(
                             status_code=500,
-                            detail="Invalid Groq API key"
+                            detail="Invalid Google API key"
                         )
                     else:
                         raise HTTPException(
                             status_code=e.response.status_code,
-                            detail=f"Groq API error: {str(e)}"
+                            detail=f"Gemini API error: {str(e)}"
                         )
                         
                 except httpx.TimeoutException:
